@@ -50,3 +50,5 @@ fprintf('\n\n');
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
+
+%%%%%%https://github.com/rieder91/MachineLearning/blob/master/Exercise%204/ex4/nnCostFunction.m
