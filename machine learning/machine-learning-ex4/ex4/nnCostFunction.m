@@ -64,10 +64,10 @@ Theta2_grad = zeros(size(Theta2));
 
 % part 1
 
-X1 = [ones(rows(X), 1) X];
-z2 = X1 * Theta1';
+X1_1 = [ones(m, 1) X];
+z2 = X1_1 * Theta1';
 a2 = sigmoid(z2);
-a2_1 = [ones(rows(a2), 1) a2];
+a2_1 = [ones(m, 1) a2];
 z3 = a2_1 * Theta2';
 a3 = sigmoid(z3);
 %sel = randperm(size(a3, 1));
@@ -78,31 +78,61 @@ a3 = sigmoid(z3);
 % This method uses an indexing trick to vectorize the creation of 'y_matrix', 
 % where each element of 'y' is mapped to a single-value row vector copied from an eye matrix.
 % check the notes in machine learning / resources /programming exercise 4 
-%sel = randperm(size(X, 1));
-%sel = sel(1:20);
-%y = y(sel,:)
+
+Theta1_no_bias = Theta1(:, 2:end);
+Theta2_no_bias = Theta2(:, 2:end);
+%sum(sum(Theta1_no_bias .^ 2))
+%sum(sum(Theta2_no_bias .^ 2))
+J_reg = lambda / (2 * m) * ...
+        (sum(sum(Theta1_no_bias .^ 2)) + sum(sum(Theta2_no_bias .^ 2)));
+
 
 y_matrix = eye(num_labels)(y,:);
-J = 1/m * sum(sum(-y_matrix .* log(a3) .- (1 .- y_matrix) .* log(1 - a3)));
+J = 1/m * sum(sum(-y_matrix .* log(a3) .- (1 .- y_matrix) .* log(1 - a3))) ...
+    + J_reg;
 
 
 % part 2
-e3 = zeros(rows(y),1);
+delta2 = zeros(num_labels, hidden_layer_size + 1);
+delta1 = zeros(hidden_layer_size, input_layer_size + 1);
+Theta2T = Theta2(:, 2:end)';
 for t = 1: m
-  e3(t) = a3(t) .* y_matrix .- y_matrix;  
+  X1_1t = X1_1(t,:);
+  z2_t = X1_1t * Theta1';
+  % the next line is commented out because a2_t has
+  % already been computed above
+  %a2_t = sigmoid(z2_t);
+  
+  
+  a2_t = a2(t,:);
+  a2_1t = [1 a2_t];
+  % the next two lines are commented out because the values 
+  % are available from previous computations
+  %z3_t = a2_1t * Theta2';
+  %a3_t = sigmoid(z3_t);
+  
+  a3_t = a3(t,:);
+
+  d3_t = a3_t' - y_matrix(t,:)'; 
+  % remove bias in Theta2 
+  % refer to resources| programming ex.4 Step 7
+  
+  % the theta2 transpose is taken out of the loop
+  % to prevent it from being computed over and over 
+  %d2_t = Theta2(:, 2:end)' * d3_t .* sigmoidGradient(z2_t)';
+  d2_t =  Theta2T * d3_t .* sigmoidGradient(z2_t)';
+  
+  delta2 = delta2 + d3_t * a2_1t;
+  delta1 = delta1 + d2_t * X1_1t;
   
 endfor
 
 
 
-
-
-
-
-
-
-
-
+reg1 = lambda / m * [zeros(rows(Theta1_no_bias), 1)  Theta1_no_bias];
+reg2 = lambda / m * [zeros(rows(Theta2_no_bias), 1)  Theta2_no_bias];
+Theta1_grad = 1/m * delta1 + reg1;
+Theta2_grad = 1/m * delta2 + reg2;
 
 
 
