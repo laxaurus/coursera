@@ -128,22 +128,26 @@ my_ratings = zeros(1682, 1);
 
 % Check the file movie_idx.txt for id of each movie in our dataset
 % For example, Toy Story (1995) has ID 1, so to rate it "4", you can set
-my_ratings(1) = 4;
+%my_ratings(1) = 4;
 
 % Or suppose did not enjoy Silence of the Lambs (1991), you can set
-my_ratings(98) = 2;
+%my_ratings(98) = 2;
 
 % We have selected a few movies we liked / did not like and the ratings we
 % gave are as follows:
-my_ratings(7) = 3;
-my_ratings(12)= 5;
-my_ratings(54) = 4;
-my_ratings(64)= 5;
-my_ratings(66)= 3;
-my_ratings(69) = 5;
-my_ratings(183) = 4;
-my_ratings(226) = 5;
-my_ratings(355)= 5;
+%my_ratings(7) = 3;
+%my_ratings(12)= 5;
+%my_ratings(54) = 4;
+%my_ratings(64)= 5;
+%my_ratings(66)= 3;
+%my_ratings(69) = 5;
+%my_ratings(183) = 4;
+%my_ratings(226) = 5;
+%my_ratings(355)= 5;
+
+
+movie_rating = [69 4;94 4;96 3;98 5;143 4;157 3;187 3;164 4;161 5;1 5;179 3;181 3;22 2;226 4;241 3;249 2;258 5;257 3];
+my_ratings(movie_rating(:,1)) = movie_rating(:,2);
 
 fprintf('\n\nNew user ratings:\n');
 for i = 1:length(my_ratings)
@@ -222,7 +226,7 @@ movieList = loadMovieList();
 
 [r, ix] = sort(my_predictions, 'descend');
 fprintf('\nTop recommendations for you:\n');
-for i=1:10
+for i=1:length(my_predictions)
     j = ix(i);
     fprintf('Predicting rating %.1f for movie %s\n', my_predictions(j), ...
             movieList{j});
