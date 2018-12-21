@@ -24,10 +24,17 @@ for iter = 1:num_iters
     % https://octave.org/doc/v4.0.3/Arithmetic-Ops.html
     % use .* to do element by element multiplicaton
     
-    temp0 = theta(1,1) - alpha / m * sum(hy .* X(:,1));
-    temp1 = theta(2,1) - alpha / m * sum(hy .* X(:,2));
+    %temp0 = theta(1,1) - alpha / m * sum(hy .* X(:,1));
+    %temp1 = theta(2,1) - alpha / m * sum(hy .* X(:,2));
     %fprintf ("temp0/1: %f // %f / %f\n", temp0, temp1, temp1 + temp0);
-    theta = [temp0;temp1];
+    %theta = [temp0;temp1]
+    
+    
+    % amend on 2018/12/20 to do the multiplication in one step
+    theta = (theta' - alpha / m * sum(hy .* X))';
+    
+    
+    
     
 
 

@@ -43,13 +43,37 @@ m = length(y);
 fprintf('First 10 examples from the dataset: \n');
 fprintf(' x = [%.0f %.0f], y = %.0f \n', [X(1:10,:) y(1:10,:)]');
 
-fprintf('Program paused. Press enter to continue.\n');
-pause;
+%% Plotting =======================
+fprintf('Plotting Data ...\n')
+subplot(2,1,1);
+plot(X(:,1),y,'rx','MarkerSize', 10);
+ylabel('price');
+xlabel('house size in sqft');
+subplot(2,1,2);
+ylabel('price');
+xlabel('num bedrooms');
+plot(X(:,2),y,'bo','MarkerSize', 10);
+
+%fprintf('Program paused. Press enter to continue.\n');
+%pause;
+
+
+
+
 
 % Scale features and set them to zero mean
 fprintf('Normalizing Features ...\n');
 
+
 [X mu sigma] = featureNormalize(X);
+
+fprintf('First 10 examples from the dataset: \n');
+fprintf(' x = [%f %f]\n', [X(1:10,:)]');
+
+
+
+
+
 
 % Add intercept term to X
 X = [ones(m, 1) X];
@@ -82,7 +106,7 @@ X = [ones(m, 1) X];
 fprintf('Running gradient descent ...\n');
 
 % Choose some alpha value
-alpha = 0.01;
+alpha = 0.1;
 num_iters = 400;
 
 % Init Theta and Run Gradient Descent 
@@ -104,16 +128,27 @@ fprintf('\n');
 % ====================== YOUR CODE HERE ======================
 % Recall that the first column of X is all-ones. Thus, it does
 % not need to be normalized.
-price = 0; % You should change this
+%price = 0; % You should change this
 
 
-% ============================================================
+X_norm = [1 ([1650 3] - mu) ./ sigma];
+price = X_norm * theta;
 
 fprintf(['Predicted price of a 1650 sq-ft, 3 br house ' ...
          '(using gradient descent):\n $%f\n'], price);
 
-fprintf('Program paused. Press enter to continue.\n');
-pause;
+
+X_norm = [1 ([2000 4 ] - mu) ./ sigma];
+price = X_norm * theta;
+
+
+% ============================================================
+
+fprintf(['Predicted price of a 2000 sq-ft, 4 br house ' ...
+         '(using gradient descent):\n $%f\n'], price);
+
+%fprintf('Program paused. Press enter to continue.\n');
+%pause;
 
 %% ================ Part 3: Normal Equations ================
 
@@ -150,7 +185,7 @@ fprintf('\n');
 % Estimate the price of a 1650 sq-ft, 3 br house
 % ====================== YOUR CODE HERE ======================
 price = 0; % You should change this
-
+price = [1 1650 3] * theta;
 
 % ============================================================
 
